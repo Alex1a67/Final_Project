@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PUMA | Sign In</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Rajdhani', sans-serif; }
+    body {
+        background: linear-gradient(135deg, #b30000, #111);
+        display: flex; align-items: center; justify-content: center;
+        height: 100vh; color: #fff;
+    }
+    .login-card {
+        background: rgba(255,255,255,0.05);
+        border: 2px solid rgba(255,255,255,0.1);
+        border-radius: 20px; width: 380px;
+        padding: 40px 30px; text-align: center;
+        backdrop-filter: blur(12px); transition: 0.3s;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        position: relative;
+    }
+    .login-card:hover { transform: scale(1.02); }
+    .logo-container { display: flex; justify-content: center; gap: 30px; margin-bottom: 20px; }
+    .logo-container img {
+        width: 60px; height: 60px; border-radius: 50%;
+        border: 2px solid #ff3333; background: white; object-fit: contain;
+    }
+    h2 { font-family: 'Orbitron'; color: #ff3333; margin-bottom: 15px; }
+    .input-box { width: 100%; margin: 15px 0; position: relative; }
+    .input-box input {
+        width: 100%; padding: 12px 15px;
+        border-radius: 10px; border: none;
+        background: rgba(255,255,255,0.15);
+        color: white; font-size: 1em;
+    }
+    .input-box input:focus { background: rgba(255,255,255,0.25); outline: none; }
+    .toggle-pass {
+        position: absolute; top: 50%; right: 15px;
+        transform: translateY(-50%); cursor: pointer;
+        color: #ff7777;
+    }
+    .btn {
+        width: 100%; padding: 12px; margin-top: 15px;
+        font-size: 1.1em; background: #ff3333;
+        border: none; border-radius: 10px; cursor: pointer;
+        color: white; font-weight: 600;
+    }
+    .btn:hover { background: #ff5555; }
+    .link-btn {
+        margin-top: 10px; background: none;
+        border: none; color: #ffaaaa;
+        text-decoration: underline; cursor: pointer;
+        font-size: 0.9em;
+    }
+    .forgot-card,
+    .register-card {
+        display:none; margin-top: 15px; text-align: left;
+        padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.2);
+        font-size: 0.9em;
+    }
+    .forgot-card input,
+    .register-card input,
+    .register-card select {
+        width: 100%; padding: 8px;
+        border-radius: 8px; background: rgba(255,255,255,0.15);
+        color: white; border: none; margin-bottom: 8px;
+    }
+    .helper-text {
+        font-size: 0.75em;
+        color: #ffcccc;
+        margin-top: 3px;
+    }
+    #mouseStatus {
+        position:absolute;
+        bottom:10px;
+        left:15px;
+        font-size:0.75em;
+        opacity:0.7;
+    }
+    footer { margin-top: 20px; font-size: 0.8em; opacity: 0.7; }
+</style>
+</head>
+
+<body>
+
+<div class="login-card">
+
+    <!-- CAMERA -->
+    <div>
+        <h3 style="color:#ffcccc;margin-bottom:8px;">Identity Verification</h3>
+        <video id="camera" autoplay playsinline style="width:100%;border-radius:12px;display:none;"></video>
+        <canvas id="snapshot" style="width:100%;border-radius:12px;display:none;"></canvas>
+
+        <button class="btn" id="openCamBtn">Open Camera</button>
+        <button class="btn" id="captureBtn" style="display:none;background:#ff6666;">Capture</button>
+        <p id="camStatus" style="font-size:0.85em;margin-top:5px;color:#ffaaaa;"></p>
+    </div>
+
+    <!-- LOGO -->
+    <div class="logo-container">
+        <img src="images122/PUMA.jpg" alt="PUMA">
+        <img src="images122/President.png" alt="President University">
+    </div>
+
+    <h2>Sign In to PUMA</h2>
+
+    <!-- LOGIN FORM -->
+    <form id="loginForm">
+        <div class="input-box">
+            <input type="text" id="username" placeholder="Enter Username, ID, or Gmail">
+        </div>
+
+        <div class="input-box">
+            <input type="password" id="password" placeholder="Enter Password">
+            <span class="toggle-pass" id="togglePass">Show</span>
+        </div>
+
+        <button class="btn" type="submit">Login</button>
+    </form>
+
+    <button class="link-btn" id="showForgot">Forgot Password?</button>
+
+    <!-- REGISTER LINK -->
+    <p style="margin-top:10px;font-size:0.9em;">
+        If you don't have account yet,
+        <button type="button" class="link-btn" id="showRegister">register here!</button>
+    </p>
+
+    <!-- FORGOT PASSWORD -->
+    <div class="forgot-card" id="forgotSection">
+        <form id="forgotForm">
+            <label>Username</label>
+            <input id="fpUsername">
+
+            <label>ID</label>
+            <input id="fpId">
+
+            <label>New Password</label>
+            <input type="password" id="fpNewPass">
+
+            <label>Confirm Password</label>
+            <input type="password" id="fpConfirmPass">
+
+            <button class="btn" type="submit">Update Password</button>
+        </form>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div class="register-card" id="registerSection">
+        <form id="registerForm">
+            <label>Full Name</label>
+            <input id="regName" placeholder="Your full name">
+
+            <label>Location</label>
+            <select id="regLocation">
+                <option value="">-- Choose Location --</option>
+                <option value="Cikarang">Cikarang</option>
+                <option value="Jakarta">Jakarta</option>
+                <option value="Bandung">Bandung</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <label>Phone Number</label>
+            <input id="regPhone" placeholder="+62 ...">
+
+            <label>Gmail</label>
+            <input id="regEmail" placeholder="example@gmail.com">
+
+            <label>Password</label>
+            <input type="password" id="regPassword" placeholder="Password">
+            <div id="passHint" class="helper-text">
+                Password: minimal 5 characters, start with Capital Letter, contain ≥1 symbol & ≥2 numbers.
+            </div>
+
+            <div id="registerMessage" class="helper-text"></div>
+
+            <button class="btn" type="submit">Create Account</button>
+        </form>
+    </div>
+
+    <div id="mouseStatus"></div>
+
+    <footer>© 2025 PUMA Website Project</footer>
+</div>
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script>
+/* ================== ACCOUNT DATA ================== */
+const accounts = [
+    { username:"yaris",  id:"110011", pass:"Yaris_11",  email:"" },
+    { username:"sultan", id:"120012", pass:"Sultan_12", email:"" },
+    { username:"fatih",  id:"130013", pass:"Fatih_13",  email:"" },
+    { username:"grace",  id:"140014", pass:"Grace_14",  email:"" },
+    { username:"marlisa",id:"150015", pass:"Marlisa_15",email:"" }
+];
+
+/* ========== PASSWORD VALIDATION FUNCTION ==========
+   REQUIREMENT:
+   - At least 5 characters
+   - First character must be Capital Letter
+   - Must contain at least 1 symbol
+   - Must contain at least 2 numbers
+*/
+function validatePassword(pass){
+    const min = 5;
+    const max = min * 3;
+
+    if(pass.length < min) return "Password must be at least 5 characters.";
+    if(pass.length > max) return "Password cannot exceed 10 characters.";
+    if(!/^[A-Z]/.test(pass)) return "Password must start with a capital letter.";
+    if(pass.replace(/[^0-9]/g,"").length < 2) return "Password must contain at least 2 numbers.";
+
+    return "";
+}
+
+/* ================== CAMERA ================== */
+let cameraStream = null;
+let photoTaken = false;
+
+const camera     = document.getElementById("camera");
+const snapshot   = document.getElementById("snapshot");
+const openCamBtn = document.getElementById("openCamBtn");
+const captureBtn = document.getElementById("captureBtn");
+
+openCamBtn.onclick = async () => {
+    try {
+        cameraStream = await navigator.mediaDevices.getUserMedia({ video:true });
+        camera.srcObject = cameraStream;
+        camera.style.display = "block";
+        captureBtn.style.display = "block";
+        document.getElementById("camStatus").textContent = "Camera is active. Please capture your face.";
+    }catch(err){
+        alert("Camera access denied!");
+    }
+};
+
+captureBtn.onclick = () => {
+    const ctx = snapshot.getContext("2d");
+    snapshot.width = camera.videoWidth;
+    snapshot.height = camera.videoHeight;
+    ctx.drawImage(camera,0,0);
+    cameraStream.getTracks().forEach(t=>t.stop());
+
+    snapshot.style.display="block";
+    camera.style.display="none";
+
+    photoTaken = true;
+    alert("Photo captured. You may now login.");
+};
+
+/* ================== jQUERY LOGIC ================== */
+$(function(){
+
+    /* 1) CLICK EVENTS (show/hide, submit, toggle) */
+    $("#showForgot").on("click", function(){              // Click Event 1
+        $("#forgotSection").slideToggle();
+    });
+
+    $("#showRegister").on("click", function(){            // Click Event 2
+        $("#registerSection").slideToggle();
+    });
+
+    $("#togglePass").on("click", function(){              // Click Event 3
+        const p = $("#password");
+        if(p.attr("type")==="password"){
+            p.attr("type","text");
+            $(this).text("Hide");
+        }else{
+            p.attr("type","password");
+            $(this).text("Show");
+        }
+    });
+
+    /* 2) CHANGE EVENT on Location (reasonable: info feedback) */
+    $("#regLocation").on("change", function(){            // Change Event
+        const loc = $(this).val();
+        if(loc){
+            $("#registerMessage").text("Location set to: " + loc);
+        } else {
+            $("#registerMessage").text("");
+        }
+    });
+
+    /* 3) MOUSE MOVE EVENT on card (simple UX helper) */
+    $(".login-card").on("mousemove", function(e){         // Mouse Move Event
+        $("#mouseStatus").text("Mouse at x:" + e.offsetX + " y:" + e.offsetY);
+    });
+
+    /* 4) KEYPRESS EVENT on registration password (live hint) */
+    $("#regPassword").on("keypress", function(){          // Keypress Event
+        $("#passHint").text("Typing... remember: Capital first letter, ≥1 symbol, ≥2 numbers.");
+    });
+
+    /* 5) FOCUS EVENT on register inputs (highlight for validation) */
+    $("#registerSection").on("focus", "input,select", function(){  // Focus Event
+        $(this).css("outline","2px solid #ff3333");
+    }).on("blur", "input,select", function(){
+        $(this).css("outline","none");
+    });
+
+    /* LOGIN with jQuery + validation + password rule */
+    $("#loginForm").on("submit", function(e){
+        e.preventDefault();
+
+        const u = $("#username").val().trim().toLowerCase();
+        const p = $("#password").val().trim();
+
+        if(!photoTaken){
+            alert("Please take a verification photo first!");
+            return;
+        }
+
+        const passErr = validatePassword(p);
+        if(passErr !== ""){
+            alert(passErr);
+            return;
+        }
+
+        const user = accounts.find(acc =>
+            (acc.username.toLowerCase() === u ||
+             acc.id === u ||
+             (acc.email && acc.email.toLowerCase() === u)) &&
+             acc.pass === p
+        );
+
+        if(!user){
+            alert("Incorrect Username/ID/Gmail or Password!");
+            return;
+        }
+
+        alert("Login Successful!");
+        window.location.href = "index2.html";
+    });
+
+    /* FORGOT PASSWORD with jQuery */
+    $("#forgotForm").on("submit", function(e){
+        e.preventDefault();
+
+        const u  = $("#fpUsername").val().trim().toLowerCase();
+        const id = $("#fpId").val().trim();
+        const np = $("#fpNewPass").val().trim();
+        const cp = $("#fpConfirmPass").val().trim();
+
+        const user = accounts.find(acc =>
+            acc.username.toLowerCase() === u && acc.id === id
+        );
+        if(!user){
+            alert("Wrong Username + ID");
+            return;
+        }
+
+        const passErr = validatePassword(np);
+        if(passErr !== ""){
+            alert(passErr);
+            return;
+        }
+
+        if(np !== cp){
+            alert("Passwords do not match!");
+            return;
+        }
+
+        user.pass = np;
+        alert("Password updated successfully!");
+    });
+
+    /* REGISTER FORM with jQuery + full validation */
+    $("#registerForm").on("submit", function(e){
+        e.preventDefault();
+
+        const name  = $("#regName").val().trim();
+        const loc   = $("#regLocation").val();
+        const phone = $("#regPhone").val().trim();
+        const email = $("#regEmail").val().trim().toLowerCase();
+        const pass  = $("#regPassword").val().trim();
+
+        if(!name || !loc || !phone || !email || !pass){
+            alert("Please fill in all registration fields.");
+            return;
+        }
+
+        // Gmail only
+        const emailPattern = /^[a-z0-9._%+-]+@gmail\.com$/i;
+        if(!emailPattern.test(email)){
+            alert("Email must be a valid Gmail address (ending with @gmail.com).");
+            return;
+        }
+
+        // Phone basic check
+        const phoneDigits = phone.replace(/\D/g,"");
+        if(phoneDigits.length < 10){
+            alert("Phone number is too short.");
+            return;
+        }
+
+        const passErr = validatePassword(pass);
+        if(passErr !== ""){
+            alert(passErr);
+            return;
+        }
+
+        // Simple unique email check
+        const exists = accounts.some(acc => acc.email && acc.email.toLowerCase() === email);
+        if(exists){
+            alert("This Gmail is already registered.");
+            return;
+        }
+
+        // Generate username & ID from email
+        const username = email.split("@")[0];
+        const newId = (200000 + accounts.length + 1).toString();
+
+        accounts.push({
+            username: username,
+            id: newId,
+            pass: pass,
+            email: email,
+            name: name,
+            location: loc,
+            phone: phone
+        });
+
+        $("#registerMessage").text(
+            "Account created! Your Username: " + username + " | ID: " + newId +
+            " (you can login using Username / ID / Gmail + password)."
+        );
+
+        alert("Registration successful!\nUsername: " + username + "\nID: " + newId);
+
+        // Optionally prefill login form
+        $("#username").val(email);
+        $("#password").val("");
+        $("#regPassword").val("");
+    });
+
+});
+</script>
+</body>
+</html>

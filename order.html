@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Snacks & Drinks - PUMA Movies</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.light-mode {
+            background-color: #e8e8e8;
+            color: #1a1a1a;
+        }
+
+        body.dark-mode {
+            background-color: #0a0a0a;
+            color: #e8e8e8;
+        }
+
+        .container {
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            height: 200px;
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid #c41e3a;
+        }
+
+        body.dark-mode .hero-banner {
+            background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+        }
+
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(196, 30, 58, 0.15), transparent);
+            animation: scan 4s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 1;
+            padding: 20px;
+        }
+
+        .hero-content h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+            background: linear-gradient(135deg, #c41e3a, #ff1744);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(196, 30, 58, 0.3);
+        }
+
+        .hero-content p {
+            font-size: 16px;
+            font-weight: 500;
+            color: #a0a0a0;
+        }
+
+        /* Cart bar */
+        .cart-bar {
+            background: linear-gradient(135deg, #c41e3a, #8b0000);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border: 2px solid #ff1744;
+        }
+
+        .cart-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .cart-icon {
+            font-size: 22px;
+        }
+
+        .cart-summary-text {
+            font-size: 14px;
+        }
+
+        .cart-bar-right button {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 2px solid #fff;
+            background: transparent;
+            color: #fff;
+            cursor: pointer;
+            letter-spacing: 1px;
+            font-weight: 700;
+            transition: 0.3s;
+        }
+
+        .cart-bar-right button:hover {
+            background: #fff;
+            color: #c41e3a;
+            transform: translateY(-1px);
+        }
+
+        /* Layout */
+        .order-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 900px) {
+            .order-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Section Title */
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            margin: 10px 0 15px 0;
+            letter-spacing: 2px;
+            border-left: 5px solid #c41e3a;
+            padding-left: 15px;
+        }
+
+        /* Product cards */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 18px;
+        }
+
+        .product-card {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 15px;
+            border: 2px solid transparent;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.light-mode .product-card {
+            background: #ffffff;
+        }
+
+        .product-card:hover {
+            border-color: #c41e3a;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+            transform: translateY(-4px);
+        }
+
+        .product-tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            background: rgba(196, 30, 58, 0.15);
+            color: #c41e3a;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .product-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .product-desc {
+            font-size: 13px;
+            color: #a0a0a0;
+            margin-bottom: 10px;
+        }
+
+        body.light-mode .product-desc {
+            color: #555;
+        }
+
+        .product-price {
+            font-size: 15px;
+            font-weight: 700;
+            color: #ff1744;
+            margin-bottom: 10px;
+        }
+
+        .product-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .qty-control {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .qty-btn {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            border: 1px solid #c41e3a;
+            background: transparent;
+            color: #c41e3a;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+            transition: 0.2s;
+        }
+
+        .qty-btn:hover {
+            background: #c41e3a;
+            color: #fff;
+        }
+
+        .qty-display {
+            min-width: 24px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .add-btn {
+            flex: 1;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            padding: 8px 10px;
+            border-radius: 20px;
+            border: 2px solid #c41e3a;
+            background: transparent;
+            color: #c41e3a;
+            cursor: pointer;
+            letter-spacing: 1px;
+            font-weight: 700;
+            transition: 0.3s;
+        }
+
+        .add-btn:hover {
+            background: #c41e3a;
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        /* Cart panel */
+        .cart-panel {
+            background: #111;
+            border-radius: 15px;
+            padding: 18px;
+            border: 2px solid #c41e3a;
+        }
+
+        body.light-mode .cart-panel {
+            background: #ffffff;
+        }
+
+        .cart-panel h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .cart-items {
+            max-height: 260px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            padding-right: 5px;
+        }
+
+        .cart-item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .cart-item-name {
+            font-weight: 600;
+        }
+
+        .cart-item-meta {
+            font-size: 12px;
+            color: #a0a0a0;
+        }
+
+        body.light-mode .cart-item-meta {
+            color: #666;
+        }
+
+        .cart-empty {
+            font-size: 13px;
+            color: #a0a0a0;
+            font-style: italic;
+        }
+
+        .cart-totals {
+            font-size: 14px;
+            margin-top: 10px;
+            border-top: 1px dashed #555;
+            padding-top: 8px;
+        }
+
+        .cart-totals p {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .cart-total-amount {
+            font-weight: 700;
+            color: #ff1744;
+        }
+
+        .cart-btns {
+            margin-top: 12px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .cart-btns button {
+            flex: 1;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            padding: 8px 10px;
+            border-radius: 20px;
+            border: 2px solid #c41e3a;
+            background: transparent;
+            color: #c41e3a;
+            cursor: pointer;
+            letter-spacing: 1px;
+            font-weight: 700;
+            transition: 0.3s;
+        }
+
+        .cart-btns button.primary {
+            background: linear-gradient(135deg, #c41e3a, #ff1744);
+            border-color: #ff1744;
+            color: #fff;
+        }
+
+        .cart-btns button:hover {
+            filter: brightness(1.05);
+            transform: translateY(-1px);
+        }
+
+        /* Checkout section */
+        .checkout-section {
+            margin-top: 25px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
+            padding: 18px;
+            border: 2px dashed #c41e3a;
+            display: none;
+        }
+
+        body.light-mode .checkout-section {
+            background: #f5f5f5;
+        }
+
+        .checkout-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .voucher-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .voucher-row input {
+            flex: 1;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 13px;
+        }
+
+        .voucher-row button {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 2px solid #c41e3a;
+            background: transparent;
+            color: #c41e3a;
+            cursor: pointer;
+            letter-spacing: 1px;
+            font-weight: 700;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+
+        .voucher-row button:hover {
+            background: #c41e3a;
+            color: #fff;
+        }
+
+        .voucher-info {
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .voucher-info span {
+            color: #00c853;
+            font-weight: 600;
+        }
+
+        .voucher-info.error span {
+            color: #ff5252;
+        }
+
+        .payment-methods {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .payment-methods p {
+            font-size: 13px;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .payment-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: 13px;
+        }
+
+        .payment-option {
+            padding: 6px 10px;
+            border-radius: 20px;
+            border: 1px solid #555;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .payment-option input {
+            accent-color: #c41e3a;
+        }
+
+        .checkout-footer {
+            margin-top: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .checkout-total-text {
+            font-size: 14px;
+        }
+
+        .checkout-total-text span {
+            font-weight: 700;
+            color: #ff1744;
+        }
+
+        .checkout-footer button {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            padding: 9px 16px;
+            border-radius: 20px;
+            border: 2px solid #00c853;
+            background: #00c853;
+            color: #fff;
+            cursor: pointer;
+            letter-spacing: 1px;
+            font-weight: 700;
+            transition: 0.3s;
+        }
+
+        .checkout-footer button:hover {
+            filter: brightness(1.05);
+            transform: translateY(-1px);
+        }
+
+        /* Receipt */
+        .receipt-section {
+            margin-top: 25px;
+            padding: 18px;
+            border-radius: 15px;
+            border: 2px dashed #4caf50;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+        }
+
+        body.light-mode .receipt-section {
+            background: #ffffff;
+        }
+
+        .receipt-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #4caf50;
+        }
+
+        .receipt-code {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .receipt-details {
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .receipt-list {
+            font-size: 13px;
+            margin: 8px 0;
+        }
+
+        .receipt-list li {
+            margin-bottom: 4px;
+        }
+
+        .receipt-note {
+            font-size: 12px;
+            margin-top: 6px;
+            color: #a0ffa0;
+        }
+
+        body.light-mode .receipt-note {
+            color: #2e7d32;
+        }
+        .product-image-wrapper {
+    width: 100%;
+    height: 120px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    background: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body.light-mode .product-image-wrapper {
+    background: #f0f0f0;
+}
+
+.product-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+    </style>
+</head>
+<body class="light-mode">
+<div class="container">
+
+    <!-- Hero -->
+    <div class="hero-banner">
+        <div class="hero-content">
+            <h1>PUMA SNACK & DRINK ORDER</h1>
+            <p>Order food & drinks before you arrive at the cinema.</p>
+            <p><b>Pay quickly, watch comfortably.</b></p>
+        </div>
+    </div>
+
+    <!-- Cart bar -->
+    <div class="cart-bar">
+        <div class="cart-bar-left">
+            <span class="cart-icon"></span>
+            <div>
+                <div><b>Your Trolley</b></div>
+                <div class="cart-summary-text">
+                    <span id="cartItemsCount">0 item</span> •
+                    <span id="cartTotalBar">Rp0</span>
+                </div>
+            </div>
+        </div>
+        <div class="cart-bar-right">
+            <button id="viewCartBtn">VIEW CART / CHECKOUT</button>
+        </div>
+    </div>
+
+    <div class="order-layout">
+        <!-- Products -->
+        <div>
+            <div class="section-title">FOOD & DRINK MENU</div>
+            <div class="product-grid">
+                <!-- Coca-Cola -->
+                <div class="product-card" data-id="coke" data-name="Coca-Cola 330ml" data-price="18000">
+                    <div class="product-tag">COLD</div>
+                    <div class="product-image-wrapper">
+                        <img src="images122/Coca-Cola.jpg" alt="Coca-Cola 330ml">
+                    </div>
+                    <div class="product-title">Coca-Cola 330ml</div>
+                    <div class="product-desc">Classic cold soda, perfect with popcorn.</div>
+                    <div class="product-price">Rp18.000</div>
+                    <div class="product-actions">
+                        <div class="qty-control">
+                            <button class="qty-btn minus-btn">-</button>
+                            <span class="qty-display">0</span>
+                            <button class="qty-btn plus-btn">+</button>
+                        </div>
+                        <button class="add-btn">ADD TO TROLLEY</button>
+                    </div>
+                </div>
+
+                <!-- Popcorn -->
+                <div class="product-card" data-id="popcorn" data-name="Popcorn Large" data-price="32000">
+                    <div class="product-tag">FAVORITE</div>
+                    <div class="product-image-wrapper">
+                        <img src="images122/pop.jpeg" alt="Popcorn Large">
+                    </div>
+                    <div class="product-title">Popcorn Large</div>
+                    <div class="product-desc">Large savory popcorn, perfect for sharing.</div>
+                    <div class="product-price">Rp32.000</div>
+                    <div class="product-actions">
+                        <div class="qty-control">
+                            <button class="qty-btn minus-btn">-</button>
+                            <span class="qty-display">0</span>
+                            <button class="qty-btn plus-btn">+</button>
+                        </div>
+                        <button class="add-btn">ADD TO TROLLEY</button>
+                    </div>
+                </div>
+
+                <!-- Caramel Popcorn -->
+                <div class="product-card" data-id="popcorn-caramel" data-name="Popcorn Caramel" data-price="36000">
+                    <div class="product-tag">SWEET</div>
+                    <div class="product-image-wrapper">
+                        <img src="images122/Caramel.jpg" alt="Popcorn Caramel">
+                    </div>
+                    <div class="product-title">Popcorn Caramel</div>
+                    <div class="product-desc">Sweet caramel popcorn, perfect for sweet snack lovers.</div>
+                    <div class="product-price">Rp36.000</div>
+                    <div class="product-actions">
+                        <div class="qty-control">
+                            <button class="qty-btn minus-btn">-</button>
+                            <span class="qty-display">0</span>
+                            <button class="qty-btn plus-btn">+</button>
+                        </div>
+                        <button class="add-btn">ADD TO TROLLEY</button>
+                    </div>
+                </div>
+
+                <!-- Bottled Water -->
+                <div class="product-card" data-id="water" data-name="Mineral Water" data-price="10000">
+                    <div class="product-tag">BASIC</div>
+                    <div class="product-image-wrapper">
+                        <img src="images122/water.webp" alt="Mineral Water">
+                    </div>
+                    <div class="product-title">Mineral Water</div>
+                    <div class="product-desc">Cold mineral water to accompany your movie.</div>
+                    <div class="product-price">Rp10.000</div>
+                    <div class="product-actions">
+                        <div class="qty-control">
+                            <button class="qty-btn minus-btn">-</button>
+                            <span class="qty-display">0</span>
+                            <button class="qty-btn plus-btn">+</button>
+                        </div>
+                        <button class="add-btn">ADD TO TROLLEY</button>
+                    </div>
+                </div>
+
+                <!-- Hot Coffee -->
+                <div class="product-card" data-id="coffee" data-name="Hot Coffee" data-price="22000">
+                    <div class="product-tag">HOT</div>
+                    <div class="product-image-wrapper">
+                        <img src="images122/hot-coffee.jpg" alt="Hot Coffee">
+                    </div>
+                    <div class="product-title">Hot Coffee</div>
+                    <div class="product-desc">Hot coffee to keep you awake during long movies.</div>
+                    <div class="product-price">Rp22.000</div>
+                    <div class="product-actions">
+                        <div class="qty-control">
+                            <button class="qty-btn minus-btn">-</button>
+                            <span class="qty-display">0</span>
+                            <button class="qty-btn plus-btn">+</button>
+                        </div>
+                        <button class="add-btn">ADD TO TROLLEY</button>
+                    </div>
+                </div>
+
+                <!-- Ice Coffee -->
+                <div class="product-card" data-id="iced-coffee" data-name="Iced Coffee" data-price="25000">
+                    <div class="product-tag">ICED</div>
+                    <div class="product-image-wrapper">
+                        <img src="images122/iced.webp" alt="Iced Coffee">
+                    </div>
+                    <div class="product-title">Iced Coffee</div>
+                    <div class="product-desc">Cold milk coffee, sweet and creamy.</div>
+                    <div class="product-price">Rp25.000</div>
+                    <div class="product-actions">
+                        <div class="qty-control">
+                            <button class="qty-btn minus-btn">-</button>
+                            <span class="qty-display">0</span>
+                            <button class="qty-btn plus-btn">+</button>
+                        </div>
+                        <button class="add-btn">ADD TO TROLLEY</button>
+                    </div>
+                </div>
+
+                <!-- Nachos -->
+                <div class="product-card" data-id="nachos" data-name="Nachos Cheese" data-price="30000">
+                    <div class="product-tag">SNACK</div>
+                    <div class="product-image-wrapper">
+                        <img src="images122/Nacho-Cheese-Sauce.jpg" alt="Nachos Cheese">
+                    </div>
+                    <div class="product-title">Nachos Cheese</div>
+                    <div class="product-desc">Nachos chips with warm cheese sauce.</div>
+                    <div class="product-price">Rp30.000</div>
+                    <div class="product-actions">
+                        <div class="qty-control">
+                            <button class="qty-btn minus-btn">-</button>
+                            <span class="qty-display">0</span>
+                            <button class="qty-btn plus-btn">+</button>
+                        </div>
+                        <button class="add-btn">ADD TO TROLLEY</button>
+                    </div>
+                </div>
+
+                <!-- Snack Pack -->
+                <div class="product-card" data-id="snack-pack" data-name="Snack Pack" data-price="28000">
+                    <div class="product-tag">COMBO</div>
+                    <div class="product-image-wrapper">
+                        <img src="images122/snack-pack.jpg" alt="Snack Pack">
+                    </div>
+                    <div class="product-title">Snack Pack</div>
+                    <div class="product-desc">Mix snack (chips, nuts, small biscuits) in one pack.</div>
+                    <div class="product-price">Rp28.000</div>
+                    <div class="product-actions">
+                        <div class="qty-control">
+                            <button class="qty-btn minus-btn">-</button>
+                            <span class="qty-display">0</span>
+                            <button class="qty-btn plus-btn">+</button>
+                        </div>
+                        <button class="add-btn">ADD TO TROLLEY</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Cart panel -->
+        <div class="cart-panel">
+            <h3>Your Trolley Details</h3>
+            <div id="cartItemsContainer" class="cart-items">
+                <p class="cart-empty">No orders yet. Add snacks & drinks from the menu.</p>
+            </div>
+            <div class="cart-totals">
+                <p>
+                    <span>Subtotal</span>
+                    <span id="cartSubtotalText">Rp0</span>
+                </p>
+                <p>
+                    <span>Voucher Discount</span>
+                    <span id="cartDiscountText">- Rp0</span>
+                </p>
+                <p>
+                    <span><b>Total</b></span>
+                    <span class="cart-total-amount" id="cartTotalText">Rp0</span>
+                </p>
+            </div>
+            <div class="cart-btns">
+                <button id="clearCartBtn">CLEAR</button>
+                <button class="primary" id="checkoutBtn">CHECKOUT</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout section -->
+    <div class="checkout-section" id="checkoutSection">
+        <div class="checkout-title">Voucher & Payment Method</div>
+
+        <div class="voucher-row">
+            <input type="text" id="voucherInput" placeholder="Enter voucher code (e.g., PUMA10, STUDENT20)">
+            <button id="applyVoucherBtn">APPLY VOUCHER</button>
+        </div>
+        <div class="voucher-info" id="voucherInfo">
+    <span>Tips:</span> use voucher codes     
+    <b>PUMA10</b> (10%), 
+    <b>STUDENT20</b> (20%), 
+    <b>LECTURE50</b> (50%), 
+    <b>HANDA100</b> (100%).
+</div>
+
+
+        <div class="payment-methods">
+            <p>Select payment method:</p>
+            <div class="payment-options">
+                <label class="payment-option">
+                    <input type="radio" name="payment" value="DANA">
+                    <span>DANA</span>
+                </label>
+                <label class="payment-option">
+                    <input type="radio" name="payment" value="GoPay">
+                    <span>GoPay</span>
+                </label>
+                <label class="payment-option">
+                    <input type="radio" name="payment" value="ShopeePay">
+                    <span>ShopeePay</span>
+                </label>
+                <label class="payment-option">
+                    <input type="radio" name="payment" value="Bank Transfer">
+                    <span>Bank</span>
+                </label>
+                <label class="payment-option">
+                    <input type="radio" name="payment" value="QRIS">
+                    <span>QRIS</span>
+                </label>
+                <label class="payment-option">
+                    <input type="radio" name="payment" value="Cash at Counter">
+                    <span>Cash / Bayar di Loket</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="checkout-footer">
+            <div class="checkout-total-text">
+                Total to pay: <span id="checkoutTotalText">Rp0</span>
+            </div>
+            <button id="confirmCheckoutBtn">CONFIRM & GET RECEIPT</button>
+        </div>
+    </div>
+
+    <!-- Receipt section -->
+    <div class="receipt-section" id="receiptSection">
+        <div class="receipt-title">Booking Snack & Drink Successful ✅</div>
+        <div class="receipt-code" id="receiptCodeText">Kode Booking: -</div>
+        <div class="receipt-details" id="receiptPaymentText"></div>
+        <ul class="receipt-list" id="receiptItemsList"></ul>
+        <div class="receipt-details" id="receiptTotalsText"></div>
+        <div class="receipt-note">
+            Show your booking code and name on <b>counter snack PUMA Movies</b> upon arrival at the cinema.
+            Your order will be prepared before the film starts.
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Theme listener (same as home)
+    window.addEventListener('message', function(event) {
+        if (event.data.type === 'themeChange') {
+            document.body.className = event.data.theme === 'dark' ? 'dark-mode' : 'light-mode';
+        }
+    });
+
+    // Helper: format Rupiah
+    function formatRupiah(num) {
+        return 'Rp' + num.toLocaleString('id-ID');
+    }
+
+    const cart = {};
+    let discountPercent = 0;
+    let appliedVoucher = null;
+
+    const cartItemsContainer = document.getElementById('cartItemsContainer');
+    const cartItemsCount = document.getElementById('cartItemsCount');
+    const cartSubtotalText = document.getElementById('cartSubtotalText');
+    const cartDiscountText = document.getElementById('cartDiscountText');
+    const cartTotalText = document.getElementById('cartTotalText');
+    const cartTotalBar = document.getElementById('cartTotalBar');
+    const checkoutTotalText = document.getElementById('checkoutTotalText');
+
+    const checkoutSection = document.getElementById('checkoutSection');
+    const receiptSection = document.getElementById('receiptSection');
+    const voucherInfo = document.getElementById('voucherInfo');
+
+    function calculateTotals() {
+        let subtotal = 0;
+        let totalItems = 0;
+
+        Object.values(cart).forEach(item => {
+            subtotal += item.price * item.qty;
+            totalItems += item.qty;
+        });
+
+        const discount = Math.round(subtotal * discountPercent);
+        const total = subtotal - discount;
+
+        return { subtotal, discount, total, totalItems };
+    }
+
+    function renderCart() {
+        const { subtotal, discount, total, totalItems } = calculateTotals();
+
+        cartItemsContainer.innerHTML = '';
+
+        if (totalItems === 0) {
+            cartItemsContainer.innerHTML = '<p class="cart-empty">No orders yet. Add snacks & drinks from the menu.</p>';
+        } else {
+            Object.values(cart).forEach(item => {
+                if (item.qty <= 0) return;
+                const row = document.createElement('div');
+                row.className = 'cart-item-row';
+
+                const left = document.createElement('div');
+                left.innerHTML = '<div class="cart-item-name">' + item.name + '</div>' +
+                    '<div class="cart-item-meta">' + item.qty + ' x ' + formatRupiah(item.price) + '</div>';
+
+                const right = document.createElement('div');
+                right.textContent = formatRupiah(item.price * item.qty);
+
+                row.appendChild(left);
+                row.appendChild(right);
+                cartItemsContainer.appendChild(row);
+            });
+        }
+
+        cartItemsCount.textContent = totalItems + ' item';
+        cartSubtotalText.textContent = formatRupiah(subtotal);
+        cartDiscountText.textContent = '- ' + formatRupiah(discount);
+        cartTotalText.textContent = formatRupiah(total);
+        cartTotalBar.textContent = formatRupiah(total);
+        checkoutTotalText.textContent = formatRupiah(total);
+    }
+
+    function addToCartFromCard(card, qtyToAdd) {
+        const id = card.dataset.id;
+        const name = card.dataset.name;
+        const price = parseInt(card.dataset.price, 10);
+
+        if (!cart[id]) {
+            cart[id] = { id, name, price, qty: 0 };
+        }
+        cart[id].qty += qtyToAdd;
+
+        if (cart[id].qty <= 0) {
+            delete cart[id];
+        }
+
+        renderCart();
+    }
+
+    // Product interactions
+    document.querySelectorAll('.product-card').forEach(card => {
+        const minusBtn = card.querySelector('.minus-btn');
+        const plusBtn = card.querySelector('.plus-btn');
+        const qtyDisplay = card.querySelector('.qty-display');
+        const addBtn = card.querySelector('.add-btn');
+
+        let tempQty = 0;
+
+        minusBtn.addEventListener('click', () => {
+            if (tempQty > 0) tempQty--;
+            qtyDisplay.textContent = tempQty;
+        });
+
+        plusBtn.addEventListener('click', () => {
+            tempQty++;
+            qtyDisplay.textContent = tempQty;
+        });
+
+        addBtn.addEventListener('click', () => {
+            if (tempQty <= 0) {
+                alert('Pilih jumlah dulu sebelum menambah ke troli.');
+                return;
+            }
+            addToCartFromCard(card, tempQty);
+            tempQty = 0;
+            qtyDisplay.textContent = tempQty;
+        });
+    });
+
+    // Clear cart
+    document.getElementById('clearCartBtn').addEventListener('click', () => {
+        Object.keys(cart).forEach(key => delete cart[key]);
+        discountPercent = 0;
+        appliedVoucher = null;
+        voucherInfo.classList.remove('error');
+        voucherInfo.innerHTML = '<span>Tips:</span> use code <b>PUMA10</b> (10% discount) or <b>STUDENT20</b> (20% discount).';
+        renderCart();
+    });
+
+    // Checkout buttons show section
+    document.getElementById('checkoutBtn').addEventListener('click', () => {
+        const { totalItems } = calculateTotals();
+        if (totalItems === 0) {
+            alert('Your trolley is still empty. Please add orders first.');
+            return;
+        }
+        checkoutSection.style.display = 'block';
+        window.scrollTo({ top: checkoutSection.offsetTop - 20, behavior: 'smooth' });
+    });
+
+    document.getElementById('viewCartBtn').addEventListener('click', () => {
+        const { totalItems } = calculateTotals();
+        if (totalItems === 0) {
+            alert('Your trolley is still empty. Please add orders first.');
+            return;
+        }
+        checkoutSection.style.display = 'block';
+        window.scrollTo({ top: checkoutSection.offsetTop - 20, behavior: 'smooth' });
+    });
+
+    // Voucher
+    document.getElementById('applyVoucherBtn').addEventListener('click', () => {
+        const input = document.getElementById('voucherInput').value.trim().toUpperCase();
+        const { subtotal } = calculateTotals();
+
+        if (subtotal === 0) {
+            voucherInfo.classList.add('error');
+            voucherInfo.innerHTML = '<span>Failed:</span> your trolley is still empty, cannot apply voucher.';
+            return;
+        }
+
+        if (input === 'PUMA10') {
+            discountPercent = 0.10;
+            appliedVoucher = 'PUMA10';
+            voucherInfo.classList.remove('error');
+            voucherInfo.innerHTML = '<span>Voucher active:</span> PUMA10 (10% discount from subtotal).';
+        } else if (input === 'STUDENT20') {
+            discountPercent = 0.20;
+            appliedVoucher = 'STUDENT20';
+            voucherInfo.classList.remove('error');
+            voucherInfo.innerHTML = '<span>Voucher active:</span> STUDENT20 (20% discount from subtotal).';
+        } else if (input === 'LECTURE50') {
+            discountPercent = 0.50;
+            appliedVoucher = 'LECTURE50';
+            voucherInfo.classList.remove('error');
+            voucherInfo.innerHTML = '<span>Voucher active:</span> LECTURE50 (50% discount from subtotal).';
+        } else if (input === 'HANDA100') {
+            discountPercent = 1.00;
+            appliedVoucher = 'HANDA100';
+            voucherInfo.classList.remove('error');
+            voucherInfo.innerHTML = '<span>Voucher active:</span> HANDA100 (100% discount from subtotal).';
+        } else if (input === '') {
+            discountPercent = 0;
+            appliedVoucher = null;
+            voucherInfo.classList.remove('error');
+            voucherInfo.innerHTML = '<span>Tips:</span> use code <b>PUMA10</b> (10% discount) or <b>STUDENT20</b> (20% discount).';
+        } else {
+            discountPercent = 0;
+            appliedVoucher = null;
+            voucherInfo.classList.add('error');
+            voucherInfo.innerHTML = '<span>Invalid voucher</span> — try PUMA10 or STUDENT20.';
+        } 
+
+        renderCart();
+    });
+
+    // Confirm checkout
+    document.getElementById('confirmCheckoutBtn').addEventListener('click', () => {
+        const { subtotal, discount, total, totalItems } = calculateTotals();
+        if (totalItems === 0) {
+            alert('Troli masih kosong.');
+            return;
+        }
+
+        const paymentSelected = document.querySelector('input[name="payment"]:checked');
+        if (!paymentSelected) {
+            alert('Please select a payment method first.');
+            return;
+        }
+
+        const paymentMethod = paymentSelected.value;
+
+        // Generate booking code
+        const randomPart = Math.random().toString(36).substring(2, 6).toUpperCase();
+        const timePart = Date.now().toString().slice(-4);
+        const bookingCode = 'PUMA-' + randomPart + timePart;
+
+        document.getElementById('receiptCodeText').textContent = 'Kode Booking: ' + bookingCode;
+        document.getElementById('receiptPaymentText').textContent =
+            'Metode pembayaran: ' + paymentMethod + (appliedVoucher ? ' • Voucher: ' + appliedVoucher : '');
+
+        const list = document.getElementById('receiptItemsList');
+        list.innerHTML = '';
+        Object.values(cart).forEach(item => {
+            if (item.qty <= 0) return;
+            const li = document.createElement('li');
+            li.textContent = item.name + ' — ' + item.qty + ' x ' + formatRupiah(item.price) +
+                ' = ' + formatRupiah(item.price * item.qty);
+            list.appendChild(li);
+        });
+
+        document.getElementById('receiptTotalsText').textContent =
+            'Subtotal: ' + formatRupiah(subtotal) +
+            ' • Diskon: ' + formatRupiah(discount) +
+            ' • Total: ' + formatRupiah(total);
+
+        receiptSection.style.display = 'block';
+        window.scrollTo({ top: receiptSection.offsetTop - 20, behavior: 'smooth' });
+    });
+
+    // Initial render
+    renderCart();
+</script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</body>
+</html>

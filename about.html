@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | PUMA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* DEFAULT = LIGHT MODE (matches index2.html initial state) */
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: #f4f4f4;
+            color: #222;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* THEME STATES (controlled by index2.html) */
+        body.light-mode {
+            background: #f4f4f4;
+            color: #222;
+        }
+
+        body.dark-mode {
+            background: #101010;
+            color: #eee;
+        }
+
+        /* DESCRIPTION CARD */
+        .description-card {
+            background: rgba(0, 0, 0, 0.06);
+            padding: 35px 30px;
+            border-radius: 18px;
+            max-width: 900px;
+            text-align: center;
+            margin-bottom: 40px;
+            border: 1px solid rgba(0, 0, 0, 0.12);
+            box-shadow: 0 6px 25px rgba(0,0,0,0.25);
+            transition: background 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .description-card h1 {
+            color: #ff3333;
+            font-size: 2.7em;
+            margin-bottom: 15px;
+            text-shadow: 0 0 8px rgba(255, 30, 30, 0.3);
+        }
+
+        .description-card p {
+            color: #333;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .description-card strong {
+            color: #000;
+        }
+
+        /* TEAM GRID */
+        .team-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        /* PROFILE CARDS */
+        .card {
+            background: rgba(0, 0, 0, 0.06);
+            border-radius: 18px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid rgba(0, 0, 0, 0.12);
+            box-shadow: 0 4px 18px rgba(0,0,0,0.2);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.3s ease, border 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 25px rgba(255, 30, 30, 0.25);
+        }
+
+        /* IMAGE STYLE */
+        .profile-pic {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border: 4px solid #ff3333;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+        }
+
+        .card h3 {
+            font-size: 1.5em;
+            color: #111;
+            margin-bottom: 5px;
+        }
+
+        .card p {
+            font-size: 1em;
+            color: #444;
+            margin: 5px 0;
+        }
+
+        /* SOCIAL LINKS */
+        .social {
+            margin-top: 12px;
+        }
+
+        .social a {
+            margin: 0 6px;
+            text-decoration: none;
+            color: #ff4444;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .social a:hover {
+            color: #ff7777;
+        }
+
+        /* DARK MODE OVERRIDES */
+        body.dark-mode .description-card {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 6px 25px rgba(0,0,0,0.55);
+        }
+
+        body.dark-mode .description-card p {
+            color: #ddd;
+        }
+
+        body.dark-mode .description-card strong {
+            color: #fff;
+        }
+
+        body.dark-mode .card {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 4px 18px rgba(0,0,0,0.5);
+        }
+
+        body.dark-mode .card h3 {
+            color: #fff;
+        }
+
+        body.dark-mode .card p {
+            color: #ccc;
+        }
+
+        body.dark-mode .social a {
+            color: #ff6666;
+        }
+
+        body.dark-mode .social a:hover {
+            color: #ff9999;
+        }
+
+        @media (max-width: 600px) {
+            .description-card h1 {
+                font-size: 2.1em;
+            }
+
+            .description-card p {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+
+<body class="light-mode">
+    <header>
+        <div class="description-card">
+            <h1>About PUMA</h1>
+            <p>
+                <strong>PUMA</strong> (President University Movie Assignment) is a creative multimedia project 
+                developed by <strong>Group 1 – MIT 1 – Batch 25</strong> as part of our 
+                <strong>Web Programming</strong> assignment under the guidance of our lecturer 
+                <strong>Mam Oca</strong>. This project combines cinema, storytelling, and modern web development 
+                into a single interactive platform. Through PUMA, we aim to showcase our technical skills, 
+                teamwork, and passion for visual storytelling by transforming a regular university task into an 
+                engaging digital experience.
+            </p>
+        </div>
+    </header>
+
+    <section class="team-container">
+        <!-- Member 1 -->
+        <div class="card">
+            <img src="images122/yari.jpg" alt="Yarisunal Firdaus" class="profile-pic">
+            <h3>Yarisunal Firdaus</h3>
+            <p><strong>Role:</strong> Project Manager & Web Developer</p>
+            <p><strong>ID:</strong> (Country Secret)</p>
+            <div class="social">
+                <a href="https://wa.me/6282299871645" target="_blank">WhatsApp</a> |
+                <a href="https://www.instagram.com/alex1a67" target="_blank">Instagram</a> |
+                <a href="https://www.linkedin.com/in/yarisunal-firdaus" target="_blank">LinkedIn</a>
+            </div>
+        </div>
+
+        <!-- Member 2 -->
+        <div class="card">
+            <img src="images122/wida.jpg" alt="Wida Sultan Utama Iryon" class="profile-pic">
+            <h3>Wida Sultan Utama Iryon</h3>
+            <p><strong>Role:</strong> Scriptwriter & Editor</p>
+            <p><strong>ID:</strong> (Country Secret)</p>
+            <div class="social">
+                <a href="https://wa.me/6285121069570" target="_blank">WhatsApp</a> |
+                <a href="https://www.instagram.com/whiskygalvanics.exe" target="_blank">Instagram</a> |
+                <a href="https://linkedin.com/in/wida-sultan-utama-iryon-66480a2b2" target="_blank">LinkedIn</a>
+            </div>
+        </div>
+
+        <!-- Member 3 -->
+        <div class="card">
+            <img src="images122/FATIH.jpg" alt="Fatih Putra Riski" class="profile-pic">
+            <h3>Fatih Putra Riski</h3>
+            <p><strong>Role:</strong> Cinematographer & Designer</p>
+            <p><strong>ID:</strong> (Country Secret)</p>
+            <div class="social">
+                <a href="https://wa.me/6283865226398" target="_blank">WhatsApp</a> |
+                <a href="https://www.instagram.com/fatihputrarizki" target="_blank">Instagram</a> |
+                <a href="https://linkedin.com/in/fatih-putra-rizki-3b751923b" target="_blank">LinkedIn</a>
+            </div>
+        </div>
+
+        <!-- Member 4 -->
+        <div class="card">
+            <img src="images122/grace.jpg" alt="Gracella Kristiani Kandowangko" class="profile-pic">
+            <h3>Gracella Kristiani Kandowangko</h3>
+            <p><strong>Role:</strong> Cinematographer & Designer</p>
+            <p><strong>ID:</strong> (Country Secret)</p>
+            <div class="social">
+                <a href="https://wa.me/6285398937655" target="_blank">WhatsApp</a> |
+                <a href="https://www.instagram.com/gracellakandowangko" target="_blank">Instagram</a> |
+                <a href="#" target="_blank">LinkedIn</a>
+            </div>
+        </div>
+
+        <!-- Member 5 -->
+        <div class="card">
+            <img src="images122/marlis.jpg" alt="Marlisa Sauyani" class="profile-pic">
+            <h3>Marlisa Sauyani</h3>
+            <p><strong>Role:</strong> Cinematographer & Designer</p>
+            <p><strong>ID:</strong> (Country Secret)</p>
+            <div class="social">
+                <a href="https://wa.me/6282398979690" target="_blank">WhatsApp</a> |
+                <a href="https://www.instagram.com/merlisa.13" target="_blank">Instagram</a> |
+                <a href="http://linkedin.com/in/merlisa-sauyai-8189b3380" target="_blank">LinkedIn</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- LISTEN FOR THEME CHANGES FROM index2.html -->
+    <script>
+        window.addEventListener("message", function(event) {
+            if (event.data && event.data.type === "themeChange") {
+                const theme = event.data.theme;
+
+                if (theme === "dark") {
+                    document.body.classList.add("dark-mode");
+                    document.body.classList.remove("light-mode");
+                } else {
+                    document.body.classList.add("light-mode");
+                    document.body.classList.remove("dark-mode");
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+```

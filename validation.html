@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="id"> 
+<div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search movies..." onkeyup="showSuggestions()">
+    <div id="suggestions" class="suggestions-box"></div>
+</div>
+<style>
+    .search-bar {
+        position: relative;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    #searchInput {
+        width: 100%;
+        padding: 10px 15px;
+        border-radius: 8px;
+        border: none;
+        font-size: 16px;
+        box-sizing: border-box;
+    }
+
+    .suggestions-box {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-top: none;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 1000;
+        display: none;
+    }
+
+    .suggestion-item {
+        padding: 10px 15px;
+        cursor: pointer;
+    }
+
+    .suggestion-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+</style>
+<script>
+const movies = [
+    "Avengers Endgame",
+    "Avengers Infinity War",
+    "Avatar The Way of Water",
+    "John Wick Chapter 4",
+    "The Batman",
+    "Joker",
+    "Interstellar",
+    "Inception",
+    "Dune Part Two",
+    "Spider-Man No Way Home",
+    "Wuthering Waves Movie",
+    "Attack on Titan Movie",
+    "Demon Slayer Mugen Train",
+    "Moana 2",
+    "Inside Out 2",
+    "Transformers Rise of the Beasts",
+    "Fast and Furious 10",
+    "Kung Fu Panda 4",
+    "Mission Impossible Dead Reckoning",
+    "The Marvels"
+];
+function showSuggestions() {
+    const input = document.getElementById("searchInput").value.toLowerCase();
+    const box = document.getElementById("suggestions");
+
+    if (input.trim() === "") {
+        box.style.display = "none";
+        return;
+    }
+
+    // FILTER MOVIES (closest match)
+    const filtered = movies
+        .filter(title => title.toLowerCase().includes(input))
+        .slice(0, 10); // limit to 10 results
+
+    // IF NO RESULT
+    if (filtered.length === 0) {
+        box.innerHTML = `<div class="suggestion-item">No results found</div>`;
+        box.style.display = "block";
+        return;
+    }
+
+    // BUILD DROPDOWN LIST
+    box.innerHTML = filtered
+        .map(title => `
+            <div class="suggestion-item" onclick="selectSuggestion('${title}')">
+                🔍 ${title}
+            </div>
+        `)
+        .join("");
+
+    box.style.display = "block";
+}
+
+// When clicking suggestion → put text into input
+function selectSuggestion(title) {
+    document.getElementById("searchInput").value = title;
+    document.getElementById("suggestions").style.display = "none";
+}
+
+</script>
+ </html>

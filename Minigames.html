@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PUMA Mini Game — Guess The Number</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;700&display=swap" rel="stylesheet">
+<style>
+    body{
+        margin:0;
+        padding:0;
+        font-family:'Rajdhani',sans-serif;
+        color:#e8e8e8;
+        display:flex;
+        justify-content:center;
+        align-items:flex-start;
+        min-height:100vh;
+    }
+    .game-wrapper{
+        margin-top:20px;
+    }
+    .game-box{
+        background:linear-gradient(135deg,#1a1a1a,#000);
+        width:520px;
+        border:3px solid #c41e3a;
+        border-radius:15px;
+        padding:25px;
+        text-align:center;
+        box-shadow:0 0 25px rgba(196,30,58,0.4);
+        margin-bottom:15px;
+    }
+    h1{
+        font-family:'Orbitron',sans-serif;
+        font-size:30px;
+        font-weight:900;
+        margin-bottom:10px;
+        background:linear-gradient(135deg,#c41e3a,#ff1744);
+        -webkit-background-clip:text;
+        -webkit-text-fill-color:transparent;
+    }
+    .info{
+        color:#bbb;
+        font-size:15px;
+        margin-bottom:15px;
+    }
+    input{
+        width:70%;
+        padding:12px;
+        border-radius:10px;
+        border:2px solid #ff1744;
+        background:#0e0e0e;
+        color:white;
+        font-family:'Rajdhani';
+        font-size:18px;
+        margin-bottom:15px;
+        text-align:center;
+        outline:none;
+    }
+    button{
+        padding:10px 25px;
+        border:2px solid #ff1744;
+        background:linear-gradient(135deg,#c41e3a,#8b0000);
+        color:white;
+        border-radius:10px;
+        cursor:pointer;
+        font-family:'Orbitron';
+        font-weight:700;
+        font-size:15px;
+        transition:0.3s;
+    }
+    button:hover{
+        transform:scale(1.08);
+        background:linear-gradient(135deg,#ff1744,#c41e3a);
+        box-shadow:0 0 15px rgba(255,23,68,0.5);
+    }
+    .message{
+        margin-top:15px;
+        font-size:20px;
+        font-weight:700;
+        min-height:26px;
+    }
+    .attempts{
+        font-size:15px;
+        margin-top:5px;
+        color:#ff1744;
+        font-family:'Orbitron';
+    }
+
+    /* Tables section */
+    .tables-box{
+        background:#0b0b0b;
+        border-radius:15px;
+        border:2px solid #c41e3a;
+        padding:15px;
+        width:520px;
+        box-shadow:0 0 18px rgba(196,30,58,0.25);
+    }
+    .tables-title{
+        font-family:'Orbitron',sans-serif;
+        font-size:18px;
+        margin-bottom:10px;
+        letter-spacing:1px;
+    }
+    .tables-grid{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:10px;
+    }
+    .table-wrap{
+        background:#111;
+        border-radius:10px;
+        padding:8px;
+        border:1px solid #444;
+        font-size:13px;
+    }
+    .table-wrap h3{
+        margin:0 0 6px 0;
+        font-family:'Orbitron',sans-serif;
+        font-size:13px;
+        letter-spacing:1px;
+        color:#ff1744;
+    }
+    table{
+        width:100%;
+        border-collapse:collapse;
+        font-size:12px;
+    }
+    th,td{
+        border-bottom:1px solid #333;
+        padding:3px 4px;
+        text-align:center;
+    }
+    th{
+        color:#ff1744;
+        font-weight:700;
+    }
+    tr:last-child td{
+        border-bottom:none;
+    }
+</style>
+</head>
+<body>
+<div class="game-wrapper">
+
+    <!-- GAME BOX -->
+    <div class="game-box">
+        <h1>GUESS THE NUMBER</h1>
+        <div class="info">Guess the secret number (1 - 100). You have only 10 attempts!</div>
+
+        <input type="number" id="guess" placeholder="Enter your number..." />
+        <br>
+        <button onclick="checkGuess()">SUBMIT</button>
+
+        <div class="message" id="message"></div>
+        <div class="attempts" id="attempts">Attempts left: 10</div>
+    </div>
+
+    <!-- TABLES BOX -->
+    <div class="tables-box">
+        <div class="tables-title">Game History</div>
+        <div class="tables-grid">
+
+            <!-- Current round guesses -->
+            <div class="table-wrap">
+                <h3>Current Round</h3>
+                <table id="roundTable">
+                    <tr style="color:#ff1744;font-weight:700;">
+                        <th>Attempt</th>
+                        <th>Your Guess</th>
+                        <th>Status</th>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- All rounds history -->
+            <div class="table-wrap">
+                <h3>Round History</h3>
+                <table id="recordTable">
+                    <tr style="color:#ff1744;font-weight:700;">
+                        <th>Round</th>
+                        <th>Result</th>
+                        <th>Secret No.</th>
+                        <th>Attempts Used</th>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+let secret = Math.floor(Math.random() * 100) + 1;
+let attempts = 10;
+let round = 1;
+
+function checkGuess(){
+    const input = document.getElementById('guess');
+    const msg = document.getElementById('message');
+    const att = document.getElementById('attempts');
+    let num = Number(input.value);
+
+    if(input.disabled) return;
+
+    if(num < 1 || num > 100 || isNaN(num)){
+        msg.style.color = '#ffae00';
+        msg.textContent = 'Enter a number between 1 and 100!';
+        return;
+    }
+    if(attempts <= 0) return;
+
+    attempts--;
+    att.textContent = `Attempts left: ${attempts}`;
+
+    let status = '';
+
+    if(num === secret){
+        msg.style.color = '#00ff88';
+        msg.textContent = `🎉 CONGRATULATIONS! You guessed it! (${secret})`;
+        addGuessRecord(10 - attempts, num, 'Correct');
+        addRoundRecord('WIN', 10 - attempts);
+        gameOver();
+        return;
+    }
+
+    let diff = Math.abs(secret - num);
+    if(diff <= 10){
+        status = 'Almost';
+        msg.style.color = '#ffae00';
+        msg.textContent = '🔥 Almost there!';
+    }else if(num > secret){
+        status = 'Too High';
+        msg.style.color = '#ff4444';
+        msg.textContent = '📈 Too high!';
+    }else{
+        status = 'Too Low';
+        msg.style.color = '#4488ff';
+        msg.textContent = '📉 Too low!';
+    }
+
+    addGuessRecord(10 - attempts, num, status);
+
+    if(attempts === 0){
+        msg.style.color = '#ff0000';
+        msg.textContent = `💀 Sorry, you lost! The number was ${secret}.`;
+        addRoundRecord('LOSE', 10);
+        gameOver();
+    }
+}
+
+// ⬇️ TABLE 1 — current round guesses
+function addGuessRecord(attempt, guess, status){
+    const table = document.getElementById('roundTable');
+    let row = table.insertRow(-1);
+    row.innerHTML = `<td>${attempt}</td><td>${guess}</td><td>${status}</td>`;
+
+    const input = document.getElementById('guess');
+    input.value = '';      // clear input
+    input.focus();         // ready for next guess
+}
+
+// ⬇️ TABLE 2 — round history
+// 1️⃣ Round history now also records attempts used
+function addRoundRecord(result, attemptsUsed){
+    const table = document.getElementById('recordTable');
+    let row = table.insertRow(-1);
+    row.innerHTML = `
+        <td>${round}</td>
+        <td>${result}</td>
+        <td>${secret}</td>
+        <td>${attemptsUsed}</td>
+    `;
+    round++;
+}
+
+
+function gameOver(){
+    const guess = document.getElementById('guess');
+    const btn = document.querySelector('button');
+    guess.disabled = true;
+    btn.textContent = 'RESTART';
+    btn.onclick = restartGame;
+}
+
+function restartGame(){
+    secret = Math.floor(Math.random() * 100) + 1;
+    attempts = 10;
+
+    const input = document.getElementById('guess');
+    input.disabled = false;
+    input.value = '';
+    input.focus();
+
+    document.getElementById('message').textContent = '';
+    document.getElementById('attempts').textContent = 'Attempts left: 10';
+
+    // 🔄 clear current round table but keep header
+    document.getElementById('roundTable').innerHTML =
+        '<tr style="color:#ff1744;font-weight:700;"><th>Attempt</th><th>Your Guess</th><th>Status</th></tr>';
+
+    const btn = document.querySelector('button');
+    btn.textContent = 'SUBMIT';
+    btn.onclick = checkGuess;
+}
+
+// ENTER key shortcut
+document.addEventListener('keydown', function(e){
+    if(e.key === 'Enter') checkGuess();
+});
+
+// Theme listener from parent (if used)
+window.addEventListener('message', function(event) {
+    if (event.data.type === 'themeChange') {
+        document.body.className = event.data.theme === 'dark' ? 'dark-mode' : 'light-mode';
+    }
+});
+</script>
+</body>
+</html>
